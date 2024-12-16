@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from Myproject.apps.core.models import Post
 from django.utils.translation import gettext as _
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -70,29 +71,25 @@ class Notification(Post):
     is_read = models.BooleanField(default=False)
 
 
-class Conversation(models.Model):
-    class Titre(models.TextChoices):
-        groupe = "CG", "Passer à la conversation en Groupe"
-        inbox = "CIB", "Conversation inbox"
+# class Message(models.Model):
+#     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     content = models.TextField(blank=True, null=True)
+#     reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     is_read = models.BooleanField(default=False)
 
-    participants = models.ManyToManyField(CustomUser, related_name="conversations")
-    title = models.CharField(max_length=255, choices=Titre, default=Titre.groupe)
-    is_group = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title if self.title else f"Conversation {self.id}"
-
+#     def __str__(self):
+#         return f"Message from {self.sender.username} in {self.conversation}"
+    
 
 class Message(models.Model):
-    conversation = models.ForeignKey(Conversation, related_name="messages", on_delete=models.CASCADE)
-    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    content = models.TextField(blank=True, null=True)
-    attachments = models.FileField(upload_to="chat_attachments/", blank=True, null=True)
-    reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    is_read = models.BooleanField(default=False)
+    sender = models.ForeignKey(CustomUser, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(CustomUser, related_name='received_messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(default=now)
+
+    class Meta:
+        ordering = ['timestamp']
 
     def __str__(self):
-        return f"Message from {self.sender.username} in {self.conversation}"
+        return f"Message from {self.sender} to {self.receiver} at {self.timestamp}"

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+    <div class="col-6 ful-heigth px-4 d-flex gap-2">
+        <a href="{% url 'profilupdate' user.pk %}" class="d-flex gap-2">
+            <div>
+                <strong class="text-success username">vous : {{ user.username }}<strong></strong>
+            </div>
+            <div class="profil text-center navprofil">
+              {% if user.profil %}
+                <img src="{{ user.profil.url }}" alt="" class="img-fluid navprofil">
+                {% else %}
+                <i class="bi bi-person-fill fs-5"></i>
+              {% endif %}
+            </div>
+    </div>
+    
+    <section class="container">
+        <div class="row">
+            <h2 class="text-success">All Users</h2>
+            {% for utilisateur in users %}
+            <a href="{% url 'messages' utilisateur.pk %}" class="text-decoration-none text-black"> 
+                <div class="d-flex justify-content-between gap-4 userpofil px-5">
+                    <strong>{{utilisateur.username}},</strong>
+                    <p>{{utilisateur.email}}</p>
+                    <div class="profil text-center navprofil">
+                        {% if utilisateur.profil %}
+                          <img src="{{ utilisateur.profil.url }}" alt="" class="img-fluid userlistprofil">
+                          {% else %}
+                          <i class="bi bi-person-fill fs-5"></i>
+                        {% endif %}
+                      </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}

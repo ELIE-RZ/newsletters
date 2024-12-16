@@ -2,11 +2,16 @@
 
 {% block content %}
 <main>
-    <h2>Postez une lettre d'information</h2>
-    <form action="">
-        {% csrf_token %}
-        {{forms.as_p}}
-        <button type="submit">Postez</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-5 bg-white p-4 rounded-4 border border-black">
+            <h1 class="text-center text-success">Postez une lettre d'information</h1>
+            <form method="POST" class="text-white fs-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ forms.as_p }}
+                <button type="submit" class="btn btn-outline-success w-100">Poste</button>
+            </form>
+
+        </div>
+    </div>
 </main>
 {% endblock %}

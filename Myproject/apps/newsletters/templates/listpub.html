@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main>
+    <div class="col-6 ful-heigth px-4 d-flex gap-2">
+        <a href="{% url 'profilupdate' user.pk %}" class="d-flex gap-2">
+            <div>
+                <strong class="text-success username">{{ user.username }}<strong></strong>
+            </div>
+            <div class="profil text-center navprofil">
+              {% if user.profil %}
+                <img src="{{ user.profil.url }}" alt="" class="img-fluid navprofil">
+                {% else %}
+                <i class="bi bi-person-fill fs-5"></i>
+              {% endif %}
+            </div>
+        </a>
+
+        <a href="{% url 'userlist' %}">
+            <strong class="text-success">Utilisateurs</strong>
+        </a>
+    </div>
+
+    <div class="px-4">
+        <h2>Mes publications</h2>
+    </div>
+
+    <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+        {% if pubs %}
+        <div class="row gy-4 justify-content-center">
+          {% for pub in pubs%}
+            <div class="col-12 col-sm-6 col-md-2 mb-4">
+              <div class="card h-100">
+                {% if pub.image %}
+                  <img src="{{ pub.image.url }}" class="img-fluid" alt="Image">
+                {% elif poste.fichier %}
+                <iframe src="{{ pub.fichier.url }}" width="100%" height="600px"></iframe>
+                {% else %}
+                    <p>Aucune image disponible</p>
+                {% endif %}
+                <div class="p-2">
+                    <h3 class="text-black">{{ pub.title }}</h3>
+                    <p class="text-black">{{ pub.discription }}</p>
+                    <p>{{poste.created_at}}</p> 
+                </div>
+                <div class="d-flex justify-content-center p-2">
+                    <button class="btn btn-success">
+                        <a href="{% url 'modify' pub.pk %}" class="text-decoration-none text-white">Modifier</a>
+                    </button>
+                    <button class="btn btn-danger">
+                        <a href="{% url 'delete' pub.pk %}" class="text-decoration-none text-white">Supprimer</a>
+                    </button>
+                </div>
+              </div>
+            </div>
+          {%endfor%}
+        </div>
+        {% else %}
+        <strong class="text-danger">Aucune publication</strong>
+        {% endif %}
+
+      </div>
+</main>
+
+{% endblock %}
